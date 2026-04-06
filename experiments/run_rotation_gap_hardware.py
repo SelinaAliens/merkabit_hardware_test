@@ -236,14 +236,52 @@ def manual_triangle_layout():
 
 # --- Circuit builder ----------------------------------------------------------
 
+def get_native_cx_directions(backend):
+    """
+    Query the backend for native CX/ECR gate directions.
+
+    On IBM Eagle r3, the native 2-qubit gate is ECR, and it has a
+    fixed directionality. CX in the non-native direction costs extra
+    H gates (2 per swap), adding depth AND changing the effective
+    observable.
+
+    Returns a set of (control, target) tuples for native directions.
+    """
+    cmap = backend.coupling_map
+    # The coupling map edges ARE the native directions
+    native_dirs = set()
+    for q1, q2 in cmap.get_edges():
+        native_dirs.add((q1, q2))
+    return native_dirs
+
+
 def build_triangle_circuit(cell, assignment, layout, tau,
-                           paired=True, inject_error=None):
+                           paired=True, inject_error=None,
+                           native_cx_dirs=None):
     """
     Build multi-merkabit triangle circuit for hardware.
 
+    CRITICAL: CX direction determines the measured observable.
+
+    For Z-parity syndrome (standard):
+      CX(data → ancilla): ancilla flips if data is |1⟩
+      Measures ⟨Z_i Z_j⟩ parity on the ancilla.
+
+    For X-parity syndrome (native direction on some hardware):
+      CX(ancilla → data): requires H-conjugation to measure Z-parity,
+      or measures ⟨X_i X_j⟩ directly without conjugation.
+
+    This function handles BOTH cases:
+      - If CX(data→anc) is native: use directly (Z-parity)
+      - If CX(anc→data) is native: use H-conjugation on ancilla
+        to convert to Z-parity measurement, and record the observable
+
+    The observable_per_edge dict records what each edge actually measures,
+    so analysis knows whether to expect Z-parity or X-parity fires.
+
     Per ouroboros step k:
       1. Intra-node gates: P(+p,-p), Rz, Rx on each merkabit
-      2. Inter-node syndrome: CX(qu[i], anc), CX(qu[j], anc), measure anc
+      2. Inter-node syndrome: CX parity check, measure ancilla
 
     Total CX per round: 2 * num_edges = 6
     Total CX for tau rounds: 6 * tau
@@ -261,6 +299,36 @@ def build_triangle_circuit(cell, assignment, layout, tau,
     qr = QuantumRegister(n_physical, 'q')
     cr = ClassicalRegister(n_classical, 'c')
     qc = QuantumCircuit(qr, cr)
+
+    # Determine CX strategy per edge based on native directions
+    # This is the lesson from Experiment 3: the "wrong" CX direction
+    # measures a different observable, and we must know which one.
+    edge_cx_strategy = {}  # (i,j) -> "native_z" or "conjugated_z" or "native_x"
+    for (i, j) in cell.edges:
+        anc = edge_anc[(i, j)]
+        qu_i = node_qu[i]
+        qu_j = node_qu[j]
+
+        if native_cx_dirs is None:
+            # No backend info — assume data→anc is available
+            edge_cx_strategy[(i, j)] = "assumed_z"
+        else:
+            # Check which directions are native
+            data_to_anc_i = (qu_i, anc) in native_cx_dirs
+            data_to_anc_j = (qu_j, anc) in native_cx_dirs
+            anc_to_data_i = (anc, qu_i) in native_cx_dirs
+            anc_to_data_j = (anc, qu_j) in native_cx_dirs
+
+            if data_to_anc_i and data_to_anc_j:
+                # Best case: both CX(data→anc) are native → Z-parity
+                edge_cx_strategy[(i, j)] = "native_z"
+            elif anc_to_data_i and anc_to_data_j:
+                # Both CX(anc→data) are native → use H-conjugation
+                # for Z-parity, or measure X-parity directly
+                edge_cx_strategy[(i, j)] = "conjugated_z"
+            else:
+                # Mixed — at least one direction needs transpiler help
+                edge_cx_strategy[(i, j)] = "mixed"
 
     # Initialize forward spinors in |+> (matching simulation protocol)
     for i in range(cell.num_nodes):
@@ -303,11 +371,30 @@ def build_triangle_circuit(cell, assignment, layout, tau,
 
         qc.barrier()
 
-        # Syndrome extraction: CX from forward spinors to edge ancillas
+        # Syndrome extraction — CX-direction-aware
+        # See Experiment 3 caveat: native CX(anc→data) on ibm_strasbourg
+        # measures XX not ZZ. We handle this explicitly.
         for e_idx, (i, j) in enumerate(cell.edges):
             anc = edge_anc[(i, j)]
-            qc.cx(node_qu[i], anc)
-            qc.cx(node_qu[j], anc)
+            strategy = edge_cx_strategy[(i, j)]
+
+            if strategy in ("native_z", "assumed_z", "mixed"):
+                # Standard: CX(data → ancilla) measures Z-parity
+                # If not native, transpiler will insert H gates
+                qc.cx(node_qu[i], anc)
+                qc.cx(node_qu[j], anc)
+
+            elif strategy == "conjugated_z":
+                # Native direction is CX(anc → data).
+                # To measure Z-parity with native CX(anc→data):
+                #   H(anc) → CX(anc→data_i) → CX(anc→data_j) → H(anc)
+                # This is equivalent to CX(data→anc) via H-conjugation.
+                # The ancilla measurement then gives Z-parity.
+                # Depth cost: +2 H gates per edge per round.
+                qc.h(anc)
+                qc.cx(anc, node_qu[i])
+                qc.cx(anc, node_qu[j])
+                qc.h(anc)
 
         qc.barrier()
 
@@ -323,7 +410,7 @@ def build_triangle_circuit(cell, assignment, layout, tau,
                 qc.reset(edge_anc[(i, j)])
             qc.barrier()
 
-    return qc
+    return qc, edge_cx_strategy
 
 
 # --- Analysis -----------------------------------------------------------------
@@ -395,9 +482,15 @@ def run_rotation_gap(backend, cell, assignment, layout, shots, tau_list,
         print(f"  tau = {tau} (paired, no error)")
         print(f"{'='*60}")
 
-        qc = build_triangle_circuit(cell, assignment, layout, tau, paired=True)
+        # Query native CX directions
+        native_dirs = get_native_cx_directions(backend)
+
+        qc, cx_strategy = build_triangle_circuit(
+            cell, assignment, layout, tau, paired=True,
+            native_cx_dirs=native_dirs)
         print(f"  Abstract depth: {qc.depth()}")
         print(f"  Gate count: {qc.size()}")
+        print(f"  CX strategy per edge: {cx_strategy}")
 
         pm = generate_preset_pass_manager(
             optimization_level=1, backend=backend)
@@ -437,13 +530,15 @@ def run_rotation_gap(backend, cell, assignment, layout, shots, tau_list,
             print(f"    Edge ({i},{j}): chi=({chi_i:+d},{chi_j:+d}) "
                   f"diff={diff} rate={rate:.4f} [{label}]")
 
+        analysis["cx_strategy"] = {str(k): v for k, v in cx_strategy.items()}
         results[f"paired_tau{tau}"] = analysis
 
         # Control: unpaired (no P gate)
         if do_control:
             print(f"\n  --- Control: unpaired, tau={tau} ---")
-            qc_ctrl = build_triangle_circuit(
-                cell, assignment, layout, tau, paired=False)
+            qc_ctrl, _ = build_triangle_circuit(
+                cell, assignment, layout, tau, paired=False,
+                native_cx_dirs=native_dirs)
             transpiled_ctrl = pm.run(qc_ctrl)
             sampler_ctrl = Sampler(backend)
             job_ctrl = sampler_ctrl.run([transpiled_ctrl], shots=shots)
@@ -460,9 +555,10 @@ def run_rotation_gap(backend, cell, assignment, layout, shots, tau_list,
         if do_error_inject and tau >= 3:
             for err_type in ['X', 'Z', 'phase']:
                 for node in range(cell.num_nodes):
-                    qc_err = build_triangle_circuit(
+                    qc_err, _ = build_triangle_circuit(
                         cell, assignment, layout, tau, paired=True,
-                        inject_error=(node, err_type))
+                        inject_error=(node, err_type),
+                        native_cx_dirs=native_dirs)
                     transpiled_err = pm.run(qc_err)
                     sampler_err = Sampler(backend)
                     job_err = sampler_err.run([transpiled_err], shots=shots)
@@ -523,7 +619,7 @@ def main():
                 "edge_anc": {(0, 1): 6, (0, 2): 7, (1, 2): 8},
             }
             for tau in args.tau:
-                qc = build_triangle_circuit(
+                qc, _ = build_triangle_circuit(
                     cell, assignment, sim_layout, tau, paired=True)
                 from qiskit import transpile
                 qc_t = transpile(qc, sim_backend, optimization_level=1)
@@ -624,6 +720,15 @@ def main():
         "assignment": [GATES[a] for a in assignment],
         "layout": {str(k): v for k, v in layout.items()
                    if k != "used_qubits"},
+        "cx_direction_note": (
+            "Syndrome extraction CX direction is hardware-dependent. "
+            "native_z = CX(data->anc) is native, measures Z-parity directly. "
+            "conjugated_z = CX(anc->data) is native, H-conjugation applied "
+            "to ancilla to measure Z-parity (see Experiment 3 caveat). "
+            "The measured observable is Z-parity in both cases; the "
+            "distinction affects depth (conjugated adds 2H/edge/round) "
+            "and must be documented for reviewers."
+        ),
         "results": results,
         "backend": backend.name,
         "shots": args.shots,
