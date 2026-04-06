@@ -1,23 +1,54 @@
-# Pentachoric Merkabit Hardware Protocol
+# Paper 3: The Rotation Gap Is Not An Error
 
-**The first physical implementation of the merkabit dual-spinor architecture on IBM quantum hardware.**
+**Ternary Structure in IBM Quantum Hardware**
 
-Selina Stenberg with Claude Anthropic, April 2026
+Selina Stenberg with Claude Anthropic, 2026
 
-## What This Is
+## Overview
 
-A complete experimental protocol for running the pentachoric merkabit on IBM Eagle r3 processors. Each merkabit node is encoded as two physical qubits (forward spinor u, inverse spinor v) with asymmetric phase evolution. The P gate -- the operation that makes a merkabit different from a qubit -- compiles to two native Rz gates with opposite signs. Zero overhead. Zero exotic hardware.
+This repository contains all simulation code, analysis scripts, hardware protocol, and raw output for Paper 3 of the Merkabit Research Series. The paper presents evidence from 756 QEC runs across three IBM Eagle r3 processors that a fraction of syndrome activations are not errors but structured cooperative transitions, and introduces a regime classifier decoder that improves logical error rates by 7-19% through selective abstention.
 
-## The Key Insight
+A cross-platform control on Google's 105-qubit Willow processor (420 experiments) shows the opposite statistics -- super-Poissonian, quadratic burst scaling, positive spatial correlation -- confirming the sub-Poissonian signal is architecture-specific to IBM's heavy-hex connectivity.
+
+**The P gate discovery (April 2026):** The merkabit's defining operation -- asymmetric phase on dual spinors -- compiles to two native IBM Rz gates with opposite signs. Zero overhead. Zero exotic hardware. The merkabit is native to every superconducting processor.
+
+## Repository Structure
+
+```
+paper_3/
+  decoders/                      Regime classifier and edge-correlated decoders
+  hardware/                      IBM Eagle r3 DAQEC analysis scripts
+  willow/                        Google Willow cross-platform comparison
+  qubit_mapper.py                Eisenstein cell topology + Eagle r3 embedding
+  ouroboros_circuit.py           12-step Floquet circuits, P gate asymmetry, R-locking
+  multi_merkabit_circuit.py      3-node triangle + 7-node Eisenstein cell
+  run_experiment.py              Main: --mode classical|hardware, --full-gap
+  run_7node_lean.py              Lean 7-node baseline test
+  outputs/                       Raw output files
+```
+
+## The P Gate
 
 The merkabit's signature is the P gate:
 ```
 Forward spinor:  Rz(+phi)
 Inverse spinor:  Rz(-phi)
 ```
-Two single-qubit rotations. Opposite signs. Every quantum computer on Earth can do this right now. The dual-spinor encoding, the counter-rotation, the Z3 chirality, the pentachoric error detection -- all of it emerges from this one asymmetry.
+Two single-qubit rotations. Opposite signs. Every quantum computer on Earth can do this right now.
 
-## Results (Classical Simulation)
+## Key Results
+
+### IBM vs Google Willow Cross-Platform Comparison
+
+| Metric | IBM Eagle r3 | Google Willow |
+|--------|-------------|---------------|
+| Fano factor | 0.856 (sub-Poissonian) | 2.42 (super-Poissonian) |
+| Distance dependence | None (ANOVA p = 0.79) | Strong (p ~ 0) |
+| Burst scaling | Linear (R^2 = 0.9999) | Super-linear (R^2 = 0.9999) |
+| Spatial correlation | Anti-bunched | Bunched (+0.13) |
+| Architecture | Heavy-hex (hexagonal) | Grid (square-like) |
+
+### Pentachoric Circuit Simulation
 
 | Configuration | Qubits | Fano Factor | Detection | Sub-Poissonian? |
 |---|---|---|---|---|
@@ -27,102 +58,81 @@ Two single-qubit rotations. Opposite signs. Every quantum computer on Earth can 
 | 7-merkabit Eisenstein, tau=1 | 26 | **0.561** | 97.5% | Yes |
 | Rotation gap (triangle) | -- | -- | **5.0 pp** | -- |
 
-Per-round Fano is sub-Poissonian at every tau -- the anti-bunching is spatial, not temporal, matching the IBM hardware pattern (F = 0.856).
+## Script-to-Result Mapping
 
-## Repository Structure
+### Decoders
 
-```
-merkabit_hardware_test/
-  qubit_mapper.py              Eisenstein cell topology + Eagle r3 embedding
-  ouroboros_circuit.py          12-step Floquet circuits, P gate asymmetry, R-locking
-  multi_merkabit_circuit.py     3-node triangle + 7-node Eisenstein cell
-  run_experiment.py             Main: --mode classical|hardware, --full-gap
-  run_7node_lean.py             Lean 7-node baseline test
-  outputs/
-    test_tau1.json              Single-merkabit error sweep (tau=1)
-    triangle_results.json       3-merkabit triangle full results (tau=1,5,12)
-```
+| Script | Section | Result |
+|--------|---------|--------|
+| `regime_classifier_v2.py` | 5, 6 | Regime classifier decoder, 7-19% LER improvement |
+| `regime_classifier_decoder.py` | 5, 6 | Unified classifier+decoder, selective abstention mechanism |
+| `decoder_v2_fast.py` | 5 | Edge-mediated correlated decoder (fast, single-calibration) |
+| `decoder_v2_edge_correlated.py` | 4 | Edge-mediated error model producing sub-Poissonian statistics |
 
-## The 5-Gate Ouroboros
+### IBM Hardware Analysis
 
-Gates: {S, R, T, P, F} -- vertices of the 4-simplex (pentachoron).
+| Script | Section | Result |
+|--------|---------|--------|
+| `ibm_heron_paper15_tests.py` | 2.1-2.4 | Fano = 0.856, linear burst scaling R^2 = 0.9999, T2 threshold channel |
+| `daqec_kww_analysis.py` | 2.4 | KWW stretched exponential on T1/T2 drift, alpha = 4/3 in T2 segments |
+| `daqec_acf_psd_analysis.py` | 2.4 | ACF/PSD analysis, DFA Hurst exponents (T1 H~0.15, T2 H~1.0) |
+| `fano_strong_coupling.py` | Appendix A | Fano/7 = alpha_s mapping, strong coupling from syndrome statistics |
 
-**R = Rotation.** When R is absent at a node, rotation is suppressed (rx * 0.4) and phase compensates (rz * 1.3). This is the R-locking event.
+### Google Willow Cross-Platform Comparison
 
-Absent gate cycling:
-```
-absent(base, chirality, t) = (base + chirality * t) mod 5
-```
-- Chirality 0 (centre): absent gate fixed -- static detection only
-- Chirality +1 (forward): cycles forward through all 5 gates
-- Chirality -1 (inverse): cycles backward -- counter-rotating
+| Script | Section | Result |
+|--------|---------|--------|
+| `willow_fano_analysis.py` | 2.5 | Fano = 2.42 (super-Poissonian), super-linear burst scaling, distance-dependent |
+| `willow_temporal_depth.py` | 2.5 | Spatial Fano 1.37-1.75, temporal autocorrelation +0.22, full decomposition |
+| `willow_classifier_test.py` | 2.6 | Regime classifier falsification: zero effect on Willow (r ~ 0, p > 0.6) |
+| `ibm_vs_willow_apples.py` | 2.5 | Round-count matched comparison, zero temporal bunching on IBM |
 
-The standing wave between forward and inverse rotation is what produces dynamic error detection. At tau=5, every edge has checked all 5 gate pairings. At tau=1, each edge checks only one.
+### Pentachoric Hardware Protocol
 
-## Gate Decomposition
+| Script | Purpose | Result |
+|--------|---------|--------|
+| `qubit_mapper.py` | Eisenstein cell to Eagle r3 embedding | 26-qubit mapping |
+| `ouroboros_circuit.py` | 12-step Floquet circuits with gate angles | P gate = Rz(+phi) x Rz(-phi) |
+| `multi_merkabit_circuit.py` | Triangle + 7-node Eisenstein cell | Fano = 0.535-0.561 |
+| `run_experiment.py` | Main: --mode classical/hardware | Full rotation gap protocol |
 
-Per ouroboros step k, each merkabit node applies:
+## Data Sources
 
-```
-U_step(k) = U_Rx(rx_angle) @ U_Rz(rz_angle) @ U_P(p_angle)
-```
-
-All three decompose to native IBM gates (ECR + Rz + sqrt(X)):
-
-| Gate | Forward qubit (q_u) | Inverse qubit (q_v) | Two-qubit? |
-|------|-------------------|-------------------|-----------|
-| P(phi) | Rz(+phi) | Rz(-phi) | **No** |
-| Rz(theta) | Rz(theta) | Rz(theta) | No |
-| Rx(theta) | Rx(theta) | Rx(theta) | No |
-
-The P gate is the only asymmetric operation. It requires no entanglement, no two-qubit gates, no special calibration. The merkabit is native to every superconducting processor.
+- **IBM Eagle r3**: Zenodo DOI [10.5281/zenodo.17881116](https://doi.org/10.5281/zenodo.17881116) (756 QEC runs, ibm_brisbane/kyoto/osaka, 14 days)
+- **Google Willow**: Zenodo DOI [10.5281/zenodo.13273331](https://doi.org/10.5281/zenodo.13273331) (420 experiments, 105-qubit, d=3,5,7)
 
 ## Usage
 
-Classical simulation (verifies circuits before hardware submission):
 ```bash
-# Single-merkabit error sweep
-python run_experiment.py --mode classical --tau 1 --shots 4096
+# Regime classifier (Paper 3 core result)
+python decoders/regime_classifier_v2.py
 
-# Full rotation gap measurement (tau=1 AND tau=5)
+# Willow cross-platform analysis
+python willow/willow_fano_analysis.py
+
+# Pentachoric circuit — classical simulation
 python run_experiment.py --mode classical --full-gap --shots 8192
+
+# Pentachoric circuit — IBM hardware
+python run_experiment.py --mode hardware --backend ibm_strasbourg --full-gap
 
 # 3-merkabit triangle
 python multi_merkabit_circuit.py --cell triangle --shots 4096
 
-# 7-merkabit Eisenstein cell (lean baseline)
+# 7-merkabit Eisenstein cell
 python run_7node_lean.py
 ```
 
-Hardware execution (requires IBM Quantum account):
-```bash
-python run_experiment.py --mode hardware --backend ibm_strasbourg --full-gap
-```
-
-## Hardware Requirements
-
-- IBM Eagle r3 or later (127+ qubits, heavy-hex connectivity)
-- Native ECR gate direction must be respected (see Thor's validation in Paper 3 Section 2.7)
-- 26 qubits for full 7-merkabit cell (14 data + 12 ancilla)
-- 9 qubits for 3-merkabit triangle (6 data + 3 ancilla)
-- Circuit depth: 15 layers at tau=1, ~75 layers at tau=5 (within T2 coherence budget)
-
-## Connection to the Papers
-
-- **Paper 15** ([The Rotation Gap Is Flat](https://doi.org/10.5281/zenodo.19417293)): Predicts 13-24 pp rotation gap, 2450x suppression, flat across error rates
-- **Paper 3** ([The Rotation Gap Is Not An Error](https://github.com/SelinaAliens/The_Rotation_Gap_Is_Not_An_Error)): Sub-Poissonian F = 0.856 on IBM, super-Poissonian F = 2.42 on Google Willow, 7-19% decoder improvement
-- **Base paper** ([The Merkabit](https://doi.org/10.5281/zenodo.18925475)): Architecture definition, E6 algebra, pentachoric code
-
-## Hardware Validation So Far
-
-Thor Henning Hetland ran a hexagonal ZZ syndrome circuit on ibm_strasbourg (Eagle r3) with native-direction CX gates and measured **F = 0.9611 < 1** -- sub-Poissonian on real hardware. The routed circuit on the same processor gives F = 1.207 (super-Poissonian), and ibm_fez (Heron r2) gives F = 18.75. The signal is architecture-specific and gate-direction-sensitive. See [Paper 3 Section 2.7](https://github.com/SelinaAliens/rotation_gap_is_flat/pull/1).
-
-This protocol extends that validation from a ZZ parity circuit to the full pentachoric ouroboros with dual-spinor encoding.
-
-## Dependencies
+## Requirements
 
 ```
-pip install qiskit qiskit-aer qiskit-ibm-runtime numpy
+pip install numpy scipy qiskit qiskit-aer qiskit-ibm-runtime
 ```
 
 All simulations use seed 42 for reproducibility.
+
+## Companion Papers
+
+- **Base paper**: [The Merkabit](https://doi.org/10.5281/zenodo.18925475) (Zenodo)
+- **Paper 15**: [The Rotation Gap Is Flat](https://github.com/selinaserephina-star/rotation_gap_merkabit) (GitHub)
+- **Full series**: Papers 1-19, Merkabit Research Series
