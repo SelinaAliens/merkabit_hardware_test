@@ -1,0 +1,547 @@
+[
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.088623046875,
+    "mean_syndrome_weight": 0.295654296875,
+    "var_syndrome_weight": 0.9804548587263431,
+    "fano_factor": 3.31622056262849,
+    "sub_poissonian": "False",
+    "per_round_detection": [
+      0.088623046875
+    ],
+    "inject_error": null,
+    "label": "baseline"
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.98388671875,
+    "mean_syndrome_weight": 3.18994140625,
+    "var_syndrome_weight": 0.8581747462606838,
+    "fano_factor": 0.2690252380746794,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.98388671875
+    ],
+    "inject_error": [
+      0,
+      0
+    ],
+    "label": "node0_gateS",
+    "node": 0,
+    "chirality": 1,
+    "error_gate": 0
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.984619140625,
+    "mean_syndrome_weight": 3.1640625,
+    "var_syndrome_weight": 0.7774725274725275,
+    "fano_factor": 0.24571971238637905,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.984619140625
+    ],
+    "inject_error": [
+      0,
+      1
+    ],
+    "label": "node0_gateR",
+    "node": 0,
+    "chirality": 1,
+    "error_gate": 1
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.983154296875,
+    "mean_syndrome_weight": 3.172607421875,
+    "var_syndrome_weight": 0.8393080714858059,
+    "fano_factor": 0.26454835404431404,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.983154296875
+    ],
+    "inject_error": [
+      0,
+      2
+    ],
+    "label": "node0_gateT",
+    "node": 0,
+    "chirality": 1,
+    "error_gate": 2
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.98388671875,
+    "mean_syndrome_weight": 3.181640625,
+    "var_syndrome_weight": 0.8470963064713065,
+    "fano_factor": 0.26624512517698523,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.98388671875
+    ],
+    "inject_error": [
+      0,
+      3
+    ],
+    "label": "node0_gateP",
+    "node": 0,
+    "chirality": 1,
+    "error_gate": 3
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.996337890625,
+    "mean_syndrome_weight": 3.202392578125,
+    "var_syndrome_weight": 0.6166584988362332,
+    "fano_factor": 0.19256180614722965,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.996337890625
+    ],
+    "inject_error": [
+      1,
+      0
+    ],
+    "label": "node1_gateS",
+    "node": 1,
+    "chirality": -1,
+    "error_gate": 0
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.997314453125,
+    "mean_syndrome_weight": 3.20703125,
+    "var_syndrome_weight": 0.59253663003663,
+    "fano_factor": 0.18476172629644005,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.997314453125
+    ],
+    "inject_error": [
+      1,
+      2
+    ],
+    "label": "node1_gateT",
+    "node": 1,
+    "chirality": -1,
+    "error_gate": 2
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.99755859375,
+    "mean_syndrome_weight": 3.21337890625,
+    "var_syndrome_weight": 0.6015889709249084,
+    "fano_factor": 0.18721382957821187,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.99755859375
+    ],
+    "inject_error": [
+      1,
+      3
+    ],
+    "label": "node1_gateP",
+    "node": 1,
+    "chirality": -1,
+    "error_gate": 3
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.997314453125,
+    "mean_syndrome_weight": 3.197998046875,
+    "var_syndrome_weight": 0.5710436102525946,
+    "fano_factor": 0.17856283896439634,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.997314453125
+    ],
+    "inject_error": [
+      1,
+      4
+    ],
+    "label": "node1_gateF",
+    "node": 1,
+    "chirality": -1,
+    "error_gate": 4
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.998291015625,
+    "mean_syndrome_weight": 3.2080078125,
+    "var_syndrome_weight": 0.5882240155677656,
+    "fano_factor": 0.18336115432005845,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.998291015625
+    ],
+    "inject_error": [
+      2,
+      0
+    ],
+    "label": "node2_gateS",
+    "node": 2,
+    "chirality": -1,
+    "error_gate": 0
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.996337890625,
+    "mean_syndrome_weight": 3.189697265625,
+    "var_syndrome_weight": 0.5654713613209706,
+    "fano_factor": 0.1772805737444084,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.996337890625
+    ],
+    "inject_error": [
+      2,
+      2
+    ],
+    "label": "node2_gateT",
+    "node": 2,
+    "chirality": -1,
+    "error_gate": 2
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.997314453125,
+    "mean_syndrome_weight": 3.194091796875,
+    "var_syndrome_weight": 0.5740407866872711,
+    "fano_factor": 0.17971956449369889,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.997314453125
+    ],
+    "inject_error": [
+      2,
+      3
+    ],
+    "label": "node2_gateP",
+    "node": 2,
+    "chirality": -1,
+    "error_gate": 3
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.99560546875,
+    "mean_syndrome_weight": 3.196044921875,
+    "var_syndrome_weight": 0.5947682363209706,
+    "fano_factor": 0.1860950802819262,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.99560546875
+    ],
+    "inject_error": [
+      2,
+      4
+    ],
+    "label": "node2_gateF",
+    "node": 2,
+    "chirality": -1,
+    "error_gate": 4
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.9912109375,
+    "mean_syndrome_weight": 6.03125,
+    "var_syndrome_weight": 0.4087912087912088,
+    "fano_factor": 0.06777885327108125,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.9912109375
+    ],
+    "inject_error": [
+      3,
+      0
+    ],
+    "label": "node3_gateS",
+    "node": 3,
+    "chirality": 0,
+    "error_gate": 0
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.993896484375,
+    "mean_syndrome_weight": 6.044921875,
+    "var_syndrome_weight": 0.3046970390720391,
+    "fano_factor": 0.05040545525198191,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.993896484375
+    ],
+    "inject_error": [
+      3,
+      1
+    ],
+    "label": "node3_gateR",
+    "node": 3,
+    "chirality": 0,
+    "error_gate": 1
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.992431640625,
+    "mean_syndrome_weight": 6.03271484375,
+    "var_syndrome_weight": 0.3579038366147741,
+    "fano_factor": 0.059327159642821314,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.992431640625
+    ],
+    "inject_error": [
+      3,
+      3
+    ],
+    "label": "node3_gateP",
+    "node": 3,
+    "chirality": 0,
+    "error_gate": 3
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.9951171875,
+    "mean_syndrome_weight": 6.0546875,
+    "var_syndrome_weight": 0.2661172161172161,
+    "fano_factor": 0.04395226279097247,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.9951171875
+    ],
+    "inject_error": [
+      3,
+      4
+    ],
+    "label": "node3_gateF",
+    "node": 3,
+    "chirality": 0,
+    "error_gate": 4
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.98388671875,
+    "mean_syndrome_weight": 3.114501953125,
+    "var_syndrome_weight": 0.585420899629884,
+    "fano_factor": 0.18796613662177666,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.98388671875
+    ],
+    "inject_error": [
+      4,
+      0
+    ],
+    "label": "node4_gateS",
+    "node": 4,
+    "chirality": 1,
+    "error_gate": 0
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.986083984375,
+    "mean_syndrome_weight": 3.1220703125,
+    "var_syndrome_weight": 0.5750829899267399,
+    "fano_factor": 0.1841992435674012,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.986083984375
+    ],
+    "inject_error": [
+      4,
+      1
+    ],
+    "label": "node4_gateR",
+    "node": 4,
+    "chirality": 1,
+    "error_gate": 1
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.9853515625,
+    "mean_syndrome_weight": 3.133056640625,
+    "var_syndrome_weight": 0.6340620588179182,
+    "fano_factor": 0.2023781027755157,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.9853515625
+    ],
+    "inject_error": [
+      4,
+      2
+    ],
+    "label": "node4_gateT",
+    "node": 4,
+    "chirality": 1,
+    "error_gate": 2
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.982666015625,
+    "mean_syndrome_weight": 3.109375,
+    "var_syndrome_weight": 0.5975579975579975,
+    "fano_factor": 0.19217945650106455,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.982666015625
+    ],
+    "inject_error": [
+      4,
+      3
+    ],
+    "label": "node4_gateP",
+    "node": 4,
+    "chirality": 1,
+    "error_gate": 3
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.982666015625,
+    "mean_syndrome_weight": 3.14453125,
+    "var_syndrome_weight": 0.7097527472527473,
+    "fano_factor": 0.22571019043068732,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.982666015625
+    ],
+    "inject_error": [
+      5,
+      0
+    ],
+    "label": "node5_gateS",
+    "node": 5,
+    "chirality": 1,
+    "error_gate": 0
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.98681640625,
+    "mean_syndrome_weight": 3.122314453125,
+    "var_syndrome_weight": 0.5606154966994811,
+    "fano_factor": 0.17955126080859132,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.98681640625
+    ],
+    "inject_error": [
+      5,
+      1
+    ],
+    "label": "node5_gateR",
+    "node": 5,
+    "chirality": 1,
+    "error_gate": 1
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.98193359375,
+    "mean_syndrome_weight": 3.125,
+    "var_syndrome_weight": 0.6617826617826618,
+    "fano_factor": 0.21177045177045176,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.98193359375
+    ],
+    "inject_error": [
+      5,
+      2
+    ],
+    "label": "node5_gateT",
+    "node": 5,
+    "chirality": 1,
+    "error_gate": 2
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.98388671875,
+    "mean_syndrome_weight": 3.13330078125,
+    "var_syndrome_weight": 0.6640336443070818,
+    "fano_factor": 0.21192783287219938,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.98388671875
+    ],
+    "inject_error": [
+      5,
+      3
+    ],
+    "label": "node5_gateP",
+    "node": 5,
+    "chirality": 1,
+    "error_gate": 3
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.970703125,
+    "mean_syndrome_weight": 3.054931640625,
+    "var_syndrome_weight": 0.6560782370840964,
+    "fano_factor": 0.2147603659471317,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.970703125
+    ],
+    "inject_error": [
+      6,
+      1
+    ],
+    "label": "node6_gateR",
+    "node": 6,
+    "chirality": -1,
+    "error_gate": 1
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.975341796875,
+    "mean_syndrome_weight": 3.053955078125,
+    "var_syndrome_weight": 0.5736449151976496,
+    "fano_factor": 0.1878367233711386,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.975341796875
+    ],
+    "inject_error": [
+      6,
+      2
+    ],
+    "label": "node6_gateT",
+    "node": 6,
+    "chirality": -1,
+    "error_gate": 2
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.9755859375,
+    "mean_syndrome_weight": 3.06396484375,
+    "var_syndrome_weight": 0.5976169013278388,
+    "fano_factor": 0.19504691855289466,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.9755859375
+    ],
+    "inject_error": [
+      6,
+      3
+    ],
+    "label": "node6_gateP",
+    "node": 6,
+    "chirality": -1,
+    "error_gate": 3
+  },
+  {
+    "total_shots": 4096,
+    "detection_rate": 0.97021484375,
+    "mean_syndrome_weight": 3.030029296875,
+    "var_syndrome_weight": 0.5937256157471001,
+    "fano_factor": 0.19594715350093644,
+    "sub_poissonian": "True",
+    "per_round_detection": [
+      0.97021484375
+    ],
+    "inject_error": [
+      6,
+      4
+    ],
+    "label": "node6_gateF",
+    "node": 6,
+    "chirality": -1,
+    "error_gate": 4
+  }
+]
