@@ -1,0 +1,82 @@
+{
+  "status": "partial",
+  "note": "tau=5 failed due to instance time limit exceeded. tau=1 and tau=3 completed successfully.",
+  "backend": "ibm_strasbourg",
+  "timestamp": "2026-04-07T13:33:51",
+  "cell": "3-merkabit triangle",
+  "chiralities": [0, 1, -1],
+  "base_assignment": ["S", "F", "R"],
+  "layout": {
+    "node_0": {"chi": 0, "qu": 62, "qv": 63},
+    "node_1": {"chi": 1, "qu": 72, "qv": 73},
+    "node_2": {"chi": -1, "qu": 81, "qv": 80},
+    "edge_01": {"ancilla": 71},
+    "edge_02": {"ancilla": 61},
+    "edge_12": {"ancilla": 82},
+    "auto_discovery": false
+  },
+  "shots": 8192,
+  "results": [
+    {
+      "tau": 1,
+      "paired": {
+        "job_id": "d7aen9fbf94c73bifoug",
+        "abstract_depth": 8,
+        "gate_count": 24,
+        "transpiled_depth": 47,
+        "cx_ecr_gates": 18,
+        "cx_strategy": "mixed",
+        "detection_rate": 0.7670,
+        "fano_factor": 0.6541,
+        "sub_poissonian": true,
+        "per_round_fano": [0.654],
+        "edge_fire_rates": {
+          "(0,1)": {"chi_diff": 1, "rate": 0.4500, "type": "mixed"},
+          "(0,2)": {"chi_diff": 1, "rate": 0.4727, "type": "mixed"},
+          "(1,2)": {"chi_diff": 2, "rate": 0.4766, "type": "counter-rotating"}
+        }
+      },
+      "control": {
+        "job_id": "d7afcr2n8nvs73e2fmqg",
+        "detection_rate": 0.7959,
+        "fano_factor": 0.6129
+      },
+      "rotation_gap_pp": -2.89
+    },
+    {
+      "tau": 3,
+      "paired": {
+        "job_id": "d7afcu1uh95s738lheb0",
+        "abstract_depth": 24,
+        "gate_count": 72,
+        "transpiled_depth": 156,
+        "cx_ecr_gates": 54,
+        "cx_strategy": "mixed",
+        "detection_rate": 0.9846,
+        "fano_factor": 0.8711,
+        "sub_poissonian": true,
+        "per_round_fano": [0.556, 0.492, 0.477],
+        "edge_fire_rates": {
+          "(0,1)": {"chi_diff": 1, "rate": 0.5251, "type": "mixed"},
+          "(0,2)": {"chi_diff": 1, "rate": 0.4974, "type": "mixed"},
+          "(1,2)": {"chi_diff": 2, "rate": 0.4947, "type": "counter-rotating"}
+        }
+      },
+      "control": {
+        "job_id": "d7afd02n8nvs73e2fn10",
+        "detection_rate": 0.9875,
+        "fano_factor": 0.5999
+      },
+      "rotation_gap_pp": -0.29
+    },
+    {
+      "tau": 5,
+      "status": "failed",
+      "error": "Instance time limit exceeded (error 1218)",
+      "abstract_depth": 40,
+      "gate_count": 120,
+      "transpiled_depth": 197,
+      "cx_ecr_gates": 75
+    }
+  ]
+}

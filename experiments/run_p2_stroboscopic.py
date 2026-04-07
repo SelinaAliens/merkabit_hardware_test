@@ -163,13 +163,15 @@ def run_stroboscopic_sweep(backend, shots, q_fwd, q_inv, step_list):
 
 def find_recurrences(sweep, threshold=0.5):
     """Find n values where P_return exceeds threshold (quasi-period peaks)."""
+    p_key = "p_return_ideal" if "p_return_ideal" in sweep[0] else "p_return"
+    n_key = "n_steps" if "n_steps" in sweep[0] else "n"
     peaks = []
     for i in range(1, len(sweep) - 1):
-        p = sweep[i]["p_return_ideal"]
-        if (p > sweep[i-1]["p_return_ideal"] and
-            p > sweep[i+1]["p_return_ideal"] and
+        p = sweep[i][p_key]
+        if (p > sweep[i-1][p_key] and
+            p > sweep[i+1][p_key] and
             p > threshold):
-            peaks.append(sweep[i]["n_steps"])
+            peaks.append(sweep[i][n_key])
     return peaks
 
 
