@@ -111,36 +111,46 @@ def build_stroboscopic_circuit(n_steps: int) -> QuantumCircuit:
 # --- Hardware runner ----------------------------------------------------------
 
 def run_stroboscopic_sweep(backend, shots, q_fwd, q_inv, step_list):
-    """Run stroboscopic measurement for each n in step_list."""
-    layout = [q_fwd, q_inv]
-    results = []
+    """
+    Run stroboscopic measurement for each n in step_list.
 
+    All circuits are batched into a single sampler.run() call — one IBM job
+    with all circuits, rather than one job per circuit. This is 10-30x faster
+    than sequential submission for large sweeps.
+    """
+    layout = [q_fwd, q_inv]
+
+    # Build and transpile all circuits up front (single pass manager instance)
+    print(f"\nBuilding {len(step_list)} circuits and transpiling...")
+    pm = generate_preset_pass_manager(
+        optimization_level=1, backend=backend, initial_layout=layout)
+    circuits = []
+    transpiled_list = []
     for n in step_list:
         qc = build_stroboscopic_circuit(n)
-        label = f"Strobo n={n}"
-        print(f"\n-- {label} " + "-" * 40)
-        print(f"   Abstract depth: {qc.depth()}")
+        t = pm.run(qc)
+        circuits.append(qc)
+        transpiled_list.append(t)
+        print(f"  n={n:3d}: abstract depth={qc.depth()} transpiled depth={t.depth()}")
 
-        pm = generate_preset_pass_manager(
-            optimization_level=1, backend=backend, initial_layout=layout)
-        transpiled = pm.run(qc)
-        print(f"   Transpiled depth: {transpiled.depth()}")
+    # Single batched job
+    print(f"\nSubmitting batch of {len(transpiled_list)} circuits...")
+    sampler = Sampler(backend)
+    job = sampler.run(transpiled_list, shots=shots)
+    print(f"Batch job ID: {job.job_id()}  -- waiting ...")
+    batch_result = job.result()
 
-        sampler = Sampler(backend)
-        job = sampler.run([transpiled], shots=shots)
-        print(f"   Job ID: {job.job_id()}  -- waiting ...")
-        result = job.result()
-
-        counts = result[0].data.c.get_counts()
+    # Parse results
+    results = []
+    for idx, n in enumerate(step_list):
+        counts = batch_result[idx].data.c.get_counts()
         total = sum(counts.values())
         p00 = counts.get('00', 0) / total
         p01 = counts.get('01', 0) / total
         p10 = counts.get('10', 0) / total
         p11 = counts.get('11', 0) / total
         zz = p00 - p01 - p10 + p11
-
         ideal = compute_return_probability(n)
-
         entry = {
             "n_steps": n,
             "p_return_hw": p00,
@@ -149,12 +159,13 @@ def run_stroboscopic_sweep(backend, shots, q_fwd, q_inv, step_list):
             "phase_ideal": ideal["phase_rad"],
             "counts": counts,
             "shots": total,
-            "transpiled_depth": transpiled.depth(),
-            "job_id": job.job_id(),
+            "transpiled_depth": transpiled_list[idx].depth(),
+            "batch_job_id": job.job_id(),
+            "circuit_index": idx,
         }
         results.append(entry)
-        print(f"   P(|00>)_hw = {p00:.4f}  ideal = {ideal['p_return']:.4f}  "
-              f"<ZZ> = {zz:+.4f}")
+        print(f"  n={n:3d}: P_hw={p00:.4f}  P_ideal={ideal['p_return']:.4f}  "
+              f"<ZZ>={zz:+.4f}")
 
     return results
 

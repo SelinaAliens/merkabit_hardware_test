@@ -73,7 +73,35 @@ validated layout q+=62/q-=81/anc=72.
 | 5   | **0.506**  | **0.564**    | ✅     | det saturated — Fano gap: paired more sub-P |
 
 At tau=5: per-round Fano stable at ~0.487 across all 5 rounds. Counter-rotating edge (chi_diff=2)
-fires most in every run. Full results: [HARDWARE-RESULTS.md](HARDWARE-RESULTS.md)
+fires most in every run.
+
+**P1b Ramsey** (`experiments/run_p1_ramsey.py`): forward vs reversed chirality Ramsey sweep,
+n=1..12, zero CX, all circuits transpile to depth 6.
+
+| n | Ideal diff | HW diff |
+|---|-----------|---------|
+| 4 | −0.556 | **−0.557** (near-exact) |
+| 8 | +1.138 | **+1.085** (95%) |
+| 10 | +1.486 | **+1.433** (96%) |
+| 12 | +0.156 | +0.194 (near-zero return) |
+
+Sign flip n=6→8 confirmed. Z2 antisymmetry confirmed (`<Z+>_diff = −<Z−>_diff`).
+
+**P2 Stroboscopic** (`experiments/run_p2_stroboscopic.py`): 30 circuits, n=1..59 (stride 2),
+all transpile to depth 6 (zero CX). One batched IBM job `d7bovn8evlqs73a4buk0`.
+
+| n | n/T | P_hw | P_ideal | Note |
+|---|-----|------|---------|------|
+| 13 | 1.1 | 0.688 | 0.696 | local min |
+| 27 | 2.2 | 0.670 | 0.683 | local min |
+| **39** | **3.2** | **0.890** | **0.909** | **hardware peak (97.9%)** |
+| 41 | 3.4 | 0.783 | 0.788 | sharp drop |
+| 57 | 4.8 | 0.901 | 0.924 | secondary peak |
+
+P_return oscillates at 97-99% fidelity throughout — quantum dynamics, not decoherence.
+Quasi-period 3.3T = 39.6 steps confirmed. ✅
+
+Full results: [HARDWARE-RESULTS.md](HARDWARE-RESULTS.md)
 
 ## Script-to-Result Mapping
 
