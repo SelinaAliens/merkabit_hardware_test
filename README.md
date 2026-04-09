@@ -73,7 +73,20 @@ validated layout q+=62/q-=81/anc=72.
 | 5   | **0.506**  | **0.564**    | ✅     | det saturated — Fano gap: paired more sub-P |
 
 At tau=5: per-round Fano stable at ~0.487 across all 5 rounds. Counter-rotating edge (chi_diff=2)
-fires most in every run. Full results: [HARDWARE-RESULTS.md](HARDWARE-RESULTS.md)
+fires most in every run.
+
+**P1b Ramsey** (`experiments/run_p1_ramsey.py`): forward vs reversed chirality Ramsey sweep,
+n=1..12, zero CX, all circuits transpile to depth 6.
+
+| n | Ideal diff | HW diff |
+|---|-----------|---------|
+| 4 | −0.556 | **−0.557** (near-exact) |
+| 8 | +1.138 | **+1.085** (95%) |
+| 10 | +1.486 | **+1.433** (96%) |
+| 12 | +0.156 | +0.194 (near-zero return) |
+
+Sign flip n=6→8 confirmed. Z2 antisymmetry confirmed (`<Z+>_diff = −<Z−>_diff`).
+Full results: [HARDWARE-RESULTS.md](HARDWARE-RESULTS.md)
 
 ## Script-to-Result Mapping
 
