@@ -86,6 +86,21 @@ n=1..12, zero CX, all circuits transpile to depth 6.
 | 12 | +0.156 | +0.194 (near-zero return) |
 
 Sign flip n=6→8 confirmed. Z2 antisymmetry confirmed (`<Z+>_diff = −<Z−>_diff`).
+
+**P2 Stroboscopic** (`experiments/run_p2_stroboscopic.py`): 30 circuits, n=1..59 (stride 2),
+all transpile to depth 6 (zero CX). One batched IBM job `d7bovn8evlqs73a4buk0`.
+
+| n | n/T | P_hw | P_ideal | Note |
+|---|-----|------|---------|------|
+| 13 | 1.1 | 0.688 | 0.696 | local min |
+| 27 | 2.2 | 0.670 | 0.683 | local min |
+| **39** | **3.2** | **0.890** | **0.909** | **hardware peak (97.9%)** |
+| 41 | 3.4 | 0.783 | 0.788 | sharp drop |
+| 57 | 4.8 | 0.901 | 0.924 | secondary peak |
+
+P_return oscillates at 97-99% fidelity throughout — quantum dynamics, not decoherence.
+Quasi-period 3.3T = 39.6 steps confirmed. ✅
+
 Full results: [HARDWARE-RESULTS.md](HARDWARE-RESULTS.md)
 
 ## Script-to-Result Mapping

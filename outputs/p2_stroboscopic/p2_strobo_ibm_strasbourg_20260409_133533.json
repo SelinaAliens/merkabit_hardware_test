@@ -1,0 +1,32 @@
+{
+  "experiment": "P2_stroboscopic_coherence",
+  "prediction": "quasi-period = 3.3T = 39.6 steps",
+  "sweep": [
+    {
+      "n_steps": 1,
+      "p_return_hw": 0.916015625,
+      "p_return_ideal": 0.9434639907282105,
+      "zz_hw": 0.8359375,
+      "phase_ideal": -0.05235987755982984,
+      "counts": {
+        "00": 938,
+        "01": 37,
+        "10": 47,
+        "11": 2
+      },
+      "shots": 1024,
+      "transpiled_depth": 6,
+      "job_id": "d7bou00evlqs73a4bt30"
+    }
+  ],
+  "ideal_peaks": [],
+  "backend": "ibm_strasbourg",
+  "qubits": {
+    "q_fwd": 62,
+    "q_inv": 81
+  },
+  "shots": 1024,
+  "n_max": 5,
+  "stride": 5,
+  "timestamp": "2026-04-09T13:35:33.099195"
+}
