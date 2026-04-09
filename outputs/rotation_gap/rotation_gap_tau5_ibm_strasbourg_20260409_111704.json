@@ -1,0 +1,37 @@
+{
+  "experiment": "rotation_gap_hardware",
+  "prediction": "detection_dynamic > detection_static, Fano < 1",
+  "cell": "triangle_3node",
+  "chiralities": [0, 1, -1],
+  "assignment": ["S", "F", "R"],
+  "layout": {
+    "node_qu": {"0": 62, "1": 72, "2": 81},
+    "node_qv": {"0": 63, "1": 73, "2": 80},
+    "edge_anc": {"(0, 1)": 71, "(0, 2)": 61, "(1, 2)": 82},
+    "note": "Manual fallback — verify against actual coupling map"
+  },
+  "results": {
+    "paired_tau5": {
+      "job_id": "d7bmt48evlqs73a49u8g",
+      "abstract_depth": 40,
+      "gate_count": 120,
+      "transpiled_depth": 257,
+      "cx_ecr_gates": 90,
+      "cx_strategy": {"(0, 1)": "mixed", "(0, 2)": "mixed", "(1, 2)": "mixed"},
+      "detection_rate": 0.9788,
+      "fano_factor": 1.0864,
+      "sub_poissonian": false,
+      "per_round_fano": [0.544, 0.517, 0.621, 0.558, 0.526],
+      "edge_fire_rates": {
+        "(0,1)": {"chi_diff": 1, "rate": 0.4512, "type": "mixed"},
+        "(0,2)": {"chi_diff": 1, "rate": 0.4771, "type": "mixed"},
+        "(1,2)": {"chi_diff": 2, "rate": 0.5102, "type": "counter-rotating"}
+      }
+    }
+  },
+  "backend": "ibm_strasbourg",
+  "shots": 4096,
+  "tau_list": [5],
+  "note": "Control run skipped (--no-control). Results recovered from stdout after JSON serialization bug (tuple keys in edge_anc). Bug fixed in script.",
+  "timestamp": "2026-04-09T11:17:04"
+}

@@ -58,6 +58,23 @@ Two single-qubit rotations. Opposite signs. Every quantum computer on Earth can 
 | 7-merkabit Eisenstein, tau=1 | 26 | **0.561** | 97.5% | Yes |
 | Rotation gap (triangle) | -- | -- | **5.0 pp** | -- |
 
+### Pentachoric Circuit Hardware — ibm_strasbourg (Apr 2026)
+
+**P3 Z2 Symmetry** (`experiments/run_p3_z2.py`): mean Z2 error = **0.0163** across n=4,6,8,12
+steps (threshold 0.03). Chirality reversal confirmed on hardware. ✅
+
+**Rotation Gap** (`experiments/run_rotation_gap_hardware.py`): 3-merkabit triangle, 9 qubits,
+validated layout q+=62/q-=81/anc=72.
+
+| tau | Paired Fano | Control Fano | Sub-P? | Note |
+|-----|------------|--------------|--------|------|
+| 1   | 0.654      | 0.613        | ✅     | det 76.7% vs 79.6% |
+| 3   | 0.871      | 0.600        | ✅     | det 98.5% vs 98.8% |
+| 5   | **0.506**  | **0.564**    | ✅     | det saturated — Fano gap: paired more sub-P |
+
+At tau=5: per-round Fano stable at ~0.487 across all 5 rounds. Counter-rotating edge (chi_diff=2)
+fires most in every run. Full results: [HARDWARE-RESULTS.md](HARDWARE-RESULTS.md)
+
 ## Script-to-Result Mapping
 
 ### Decoders
