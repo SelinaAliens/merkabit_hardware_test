@@ -1,0 +1,105 @@
+{
+  "experiment": "rotation_gap_hardware",
+  "prediction": "detection_dynamic > detection_static, Fano < 1",
+  "cell": "triangle_3node",
+  "chiralities": [
+    0,
+    1,
+    -1
+  ],
+  "assignment": [
+    "S",
+    "F",
+    "R"
+  ],
+  "layout": {
+    "node_qu": {
+      "0": 62,
+      "1": 72,
+      "2": 81
+    },
+    "node_qv": {
+      "0": 63,
+      "1": 73,
+      "2": 80
+    },
+    "edge_anc": {
+      "(0, 1)": 71,
+      "(0, 2)": 61,
+      "(1, 2)": 82
+    },
+    "note": "Manual fallback \u2014 verify against actual coupling map"
+  },
+  "cx_direction_note": "Syndrome extraction CX direction is hardware-dependent. native_z = CX(data->anc) is native, measures Z-parity directly. conjugated_z = CX(anc->data) is native, H-conjugation applied to ancilla to measure Z-parity (see Experiment 3 caveat). The measured observable is Z-parity in both cases; the distinction affects depth (conjugated adds 2H/edge/round) and must be documented for reviewers.",
+  "results": {
+    "paired_tau5": {
+      "total_shots": 4096,
+      "tau": 5,
+      "detection_rate": 1.0,
+      "mean_syndrome_weight": 7.530029296875,
+      "var_syndrome_weight": 3.811552233573718,
+      "fano_factor": 0.5061802661452501,
+      "sub_poissonian": "True",
+      "per_round_fano": [
+        0.49354138033255185,
+        0.48089634391353037,
+        0.48282147630219274,
+        0.4845775452804207,
+        0.4918894227329514
+      ],
+      "edge_fire_rates": [
+        0.4869140625,
+        0.507177734375,
+        0.5119140625
+      ],
+      "transpiled_depth": 279,
+      "cx_count": 108,
+      "job_id": "d7bmv294p4gc73f4ik10",
+      "counts_summary": {
+        "000000010000010": 6,
+        "101001110110100": 5,
+        "110100001111001": 4,
+        "011001100011001": 4,
+        "010110111101110": 3,
+        "011001000011001": 3,
+        "010010101101110": 3,
+        "010110111101010": 3,
+        "000000111111010": 3,
+        "110001010000010": 3
+      },
+      "cx_strategy": {
+        "(0, 1)": "mixed",
+        "(0, 2)": "mixed",
+        "(1, 2)": "mixed"
+      }
+    },
+    "unpaired_tau5": {
+      "total_shots": 4096,
+      "tau": 5,
+      "detection_rate": 1.0,
+      "mean_syndrome_weight": 7.5234375,
+      "var_syndrome_weight": 4.240720390720391,
+      "fano_factor": 0.5636679231694808,
+      "sub_poissonian": "True",
+      "per_round_fano": [
+        0.5110368819573496,
+        0.48007540093101586,
+        0.4816339480327911,
+        0.5003318836787167,
+        0.5052642233989384
+      ],
+      "edge_fire_rates": [
+        0.491015625,
+        0.508984375,
+        0.5046875
+      ],
+      "job_id": "d7bmv3qr4f1s73a2dpj0"
+    }
+  },
+  "backend": "ibm_strasbourg",
+  "shots": 4096,
+  "tau_list": [
+    5
+  ],
+  "timestamp": "2026-04-09T11:21:27.049148"
+}

@@ -718,8 +718,10 @@ def main():
         "cell": "triangle_3node",
         "chiralities": cell.chirality,
         "assignment": [GATES[a] for a in assignment],
-        "layout": {str(k): v for k, v in layout.items()
-                   if k != "used_qubits"},
+        "layout": {
+            str(k): ({str(ik): iv for ik, iv in v.items()} if isinstance(v, dict) else v)
+            for k, v in layout.items() if k != "used_qubits"
+        },
         "cx_direction_note": (
             "Syndrome extraction CX direction is hardware-dependent. "
             "native_z = CX(data->anc) is native, measures Z-parity directly. "
