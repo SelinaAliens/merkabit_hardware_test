@@ -101,6 +101,11 @@ all transpile to depth 6 (zero CX). One batched IBM job `d7bovn8evlqs73a4buk0`.
 P_return oscillates at 97-99% fidelity throughout — quantum dynamics, not decoherence.
 Quasi-period 3.3T = 39.6 steps confirmed. ✅
 
+**P5 DTC** (`experiments/run_p5_dtc.py`): PENDING — IBM platform outage April 10, 2026. ⏳
+Script ready: 24 circuits (n=1..48, stride 2), zero CX, all transpile to depth 6.
+Ideal DTC ratio: paired=55.8 >> unpaired=6.7. Appendix N caveat: n ≤ 48 (4T coherence budget).
+Run when IBM recovers: `python3 -u experiments/run_p5_dtc.py --backend ibm_brussels --n-max 48 --stride 2 --shots 2048 --epsilon 0.1`
+
 Full results: [HARDWARE-RESULTS.md](HARDWARE-RESULTS.md)
 
 ## Script-to-Result Mapping

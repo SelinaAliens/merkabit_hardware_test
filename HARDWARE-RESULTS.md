@@ -178,6 +178,52 @@ prediction at 97-99% fidelity across all 30 measurement points. **Quasi-period P
 
 ---
 
+## P5: Discrete Time Crystal Survival
+
+**Status: PENDING — IBM platform outage (April 10, 2026)** ⏳
+
+**Script**: `experiments/run_p5_dtc.py`
+**Backend**: ibm_brussels (127 qubits)
+**Shots**: 2048 · **Qubits**: q+=62, q-=81 · **CX gates**: 0
+**Drive period**: T = 12 steps · **DTC signature**: subharmonic at 2T = 24 steps
+**Sweep**: n = 1..48 (stride 2, 24 circuits/run)
+
+**Appendix N caveat**: Hardware T₂ limits coherence to ~12 Floquet periods (~4T). Prediction specifies
+50 periods; experiment targets n ≤ 48 (4T) to stay within the coherence budget. DTC ratio
+verified within this window.
+
+### Ideal DTC Ratios (classical simulation)
+
+| Run | Power at 1/2T | DTC ratio (2T/T) |
+|-----|--------------|-----------------|
+| Paired clean | 1.5853 | **55.77** |
+| Unpaired control | 75.6886 | 6.73 |
+| Paired eps=0.1 | 3.1726 | **81.11** |
+
+Paired ratio >> unpaired: 55.8 vs 6.7. DTC signature is robust to epsilon=0.1 perturbation
+(ratio increases to 81.1). ACF lag-T = +0.387, ACF lag-2T = +0.386 — period-doubling confirmed
+in simulation.
+
+### Hardware Status
+
+All four hardware runs on April 10, 2026 were cancelled by IBM:
+
+| Job ID | Backend | Note |
+|--------|---------|------|
+| `d7c8tj2r4f1s73a2ufd0` | ibm_strasbourg | CANCELLED: RAN TOO LONG |
+| `d7cg1jir4f1s73a35020` | ibm_brussels | CANCELLED: RAN TOO LONG |
+
+ibm_brussels had 0 pending jobs at submission time — platform-wide IBM issue, not queue congestion.
+All 24 circuits transpile to **depth 6** regardless of n (zero CX, P gate = Rz(+phi)/Rz(−phi)).
+
+Run when IBM recovers:
+```bash
+python3 -u experiments/run_p5_dtc.py \
+  --backend ibm_brussels --n-max 48 --stride 2 --shots 2048 --epsilon 0.1
+```
+
+---
+
 ## Output Files
 
 | File | Contents |
@@ -196,4 +242,5 @@ prediction at 97-99% fidelity across all 30 measurement points. **Quasi-period P
 - **Instance**: `Paid` (pay-as-you-go) is selected automatically; ibm_strasbourg requires this plan
 - **tau=5 depth**: 279 transpiled, 108 CX/ECR — safely below the 300-gate decoherence warning
 - **JSON bug fixed**: `edge_anc` tuple keys now serialized correctly (Apr 9, `run_rotation_gap_hardware.py`)
-- **Pending experiments**: P1a Berry Phase (CX-based, 3q), P2 Stroboscopic (0 CX, n=1..60), P5 DTC
+- **P5 DTC**: Script ready (batch, stride=2, 24 circuits/run). IBM platform issue April 10 blocked all runs. Try early morning or monitor IBM status page.
+- **P1a Berry Phase**: Script refactored (batch: 2 jobs — calibration + sweep). Not yet run on hardware.
