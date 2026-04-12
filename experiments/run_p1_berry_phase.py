@@ -202,60 +202,87 @@ def build_calibrated_zpgpw(n_steps: int, basis: str,
 
 # --- Hardware runner ----------------------------------------------------------
 
-def run_circuit(backend, qc, layout, shots, label):
-    print(f"\n-- {label} " + "-" * max(0, 60 - len(label)))
-    print(f"   Abstract depth : {qc.depth()}   gates : {qc.size()}")
+def run_calibration(backend, shots, q_anc, q_fwd, q_inv):
+    """Step 1: measure systematic phase offset on ancilla. Batched (1 IBM job)."""
+    layout = [q_anc, q_fwd, q_inv]
+    print("\n-- Calibration (X + Y basis, batched) " + "-" * 22)
+
     pm = generate_preset_pass_manager(
         optimization_level=1, backend=backend, initial_layout=layout)
-    transpiled = pm.run(qc)
-    print(f"   Transpiled depth: {transpiled.depth()}")
+    transpiled_x = pm.run(build_calibration_circuit('X'))
+    transpiled_y = pm.run(build_calibration_circuit('Y'))
+    print(f"   Cal X depth: {transpiled_x.depth()}  Cal Y depth: {transpiled_y.depth()}")
+
     sampler = Sampler(backend)
-    job = sampler.run([transpiled], shots=shots)
-    print(f"   Job ID: {job.job_id()}  -- waiting ...")
-    result = job.result()
-    counts = result[0].data.c.get_counts()
-    total = sum(counts.values())
-    p0 = counts.get('0', 0) / total
-    p1 = counts.get('1', 0) / total
-    exp_val = p0 - p1
-    print(f"   Counts: {counts}   <{label[-1]}> = {exp_val:+.4f}")
-    return {
-        "label": label, "counts": counts, "shots": total,
-        "exp_val": exp_val, "transpiled_depth": transpiled.depth(),
-        "abstract_depth": qc.depth(), "job_id": job.job_id(),
-    }
+    job = sampler.run([transpiled_x, transpiled_y], shots=shots)
+    print(f"   Batch job ID: {job.job_id()}  -- waiting ...")
+    batch_result = job.result()
 
+    results = {}
+    for idx, (basis, t) in enumerate(zip(('X', 'Y'), (transpiled_x, transpiled_y))):
+        counts = batch_result[idx].data.c.get_counts()
+        total = sum(counts.values())
+        p0 = counts.get('0', 0) / total
+        exp_val = p0 - (1 - p0)
+        results[basis] = {
+            "counts": counts, "shots": total, "exp_val": exp_val,
+            "transpiled_depth": t.depth(),
+            "batch_job_id": job.job_id(), "circuit_index": idx,
+        }
+        print(f"   <{basis}> = {exp_val:+.4f}  depth={t.depth()}")
 
-def run_calibration(backend, shots, q_anc, q_fwd, q_inv):
-    """Step 1: measure systematic phase offset on ancilla."""
-    layout = [q_anc, q_fwd, q_inv]
-    cal_x = run_circuit(backend, build_calibration_circuit('X'),
-                        layout, shots, "Calibration X-basis")
-    cal_y = run_circuit(backend, build_calibration_circuit('Y'),
-                        layout, shots, "Calibration Y-basis")
-    x_hw = cal_x["exp_val"]
-    y_hw = cal_y["exp_val"]
+    x_hw = results['X']['exp_val']
+    y_hw = results['Y']['exp_val']
     phi_cal = float(np.arctan2(y_hw, x_hw))
     print(f"\n   Calibration: <X>={x_hw:+.4f}  <Y>={y_hw:+.4f}")
     print(f"   Systematic offset phi_cal = {np.degrees(phi_cal):+.2f} deg")
     print(f"   (Ideal: <X>=1.0, <Y>=0.0, phi_cal=0.0)")
-    return phi_cal, {"x": cal_x, "y": cal_y, "phi_cal_rad": phi_cal,
+    return phi_cal, {"x": results['X'], "y": results['Y'],
+                     "phi_cal_rad": phi_cal,
                      "phi_cal_deg": float(np.degrees(phi_cal))}
 
 
 def run_calibrated_sweep(backend, phi_cal, shots, q_anc, q_fwd, q_inv,
                          step_list):
-    """Step 2: calibrated ZP-GPW sweep over n steps."""
+    """Step 2: calibrated ZP-GPW sweep. Batched (1 IBM job for all circuits)."""
     layout = [q_anc, q_fwd, q_inv]
+
+    # Order: (n=steps[0],X), (n=steps[0],Y), (n=steps[1],X), ...
+    order = [(n, b) for n in step_list for b in ('X', 'Y')]
+    print(f"\nBuilding {len(order)} sweep circuits and transpiling...")
+
+    pm = generate_preset_pass_manager(
+        optimization_level=1, backend=backend, initial_layout=layout)
+    transpiled_list = []
+    for n, basis in order:
+        qc = build_calibrated_zpgpw(n, basis, phi_cal)
+        t = pm.run(qc)
+        transpiled_list.append(t)
+        print(f"  n={n:2d} {basis}: abstract depth={qc.depth()} "
+              f"transpiled depth={t.depth()}")
+
+    print(f"\nSubmitting batch of {len(transpiled_list)} circuits...")
+    sampler = Sampler(backend)
+    job = sampler.run(transpiled_list, shots=shots)
+    print(f"Batch job ID: {job.job_id()}  -- waiting ...")
+    batch_result = job.result()
+
     results = []
-    for n in step_list:
+    for step_idx, n in enumerate(step_list):
         ideal = expected_signal(n)
         data = {}
-        for basis in ('X', 'Y'):
-            qc = build_calibrated_zpgpw(n, basis, phi_cal)
-            r = run_circuit(backend, qc, layout, shots,
-                            f"ZP-GPW n={n} {basis}-basis (calibrated)")
-            data[basis] = r
+        for basis_idx, basis in enumerate(('X', 'Y')):
+            circuit_idx = step_idx * 2 + basis_idx
+            counts = batch_result[circuit_idx].data.c.get_counts()
+            total = sum(counts.values())
+            p0 = counts.get('0', 0) / total
+            exp_val = p0 - (1 - p0)
+            data[basis] = {
+                "counts": counts, "shots": total, "exp_val": exp_val,
+                "transpiled_depth": transpiled_list[circuit_idx].depth(),
+                "batch_job_id": job.job_id(), "circuit_index": circuit_idx,
+            }
+
         x_hw = data['X']['exp_val']
         y_hw = data['Y']['exp_val']
         delta_hw = float(np.arctan2(y_hw, x_hw))
@@ -271,9 +298,10 @@ def run_calibrated_sweep(backend, phi_cal, shots, q_anc, q_fwd, q_inv,
             "runs": data,
         }
         results.append(entry)
-        print(f"\n   n={n}: delta_hw={np.degrees(delta_hw):+.2f} deg  "
+        print(f"  n={n:2d}: delta_hw={np.degrees(delta_hw):+.2f} deg  "
               f"delta_ideal={ideal['delta_deg']:+.2f} deg  "
-              f"error={np.degrees(delta_hw - ideal['delta_rad']):+.2f} deg")
+              f"error={np.degrees(delta_hw - ideal['delta_rad']):+.2f} deg  "
+              f"|M00|={mag_hw:.4f}")
     return results
 
 
