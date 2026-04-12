@@ -1,0 +1,303 @@
+{
+  "experiment": "P1_berry_phase_calibrated_zpgpw",
+  "prediction": "Berry phase separation = 7.13 rad",
+  "calibration": {
+    "x": {
+      "counts": {
+        "0": 3977,
+        "1": 119
+      },
+      "shots": 4096,
+      "exp_val": 0.94189453125,
+      "transpiled_depth": 1,
+      "batch_job_id": "d7ds00h4p4gc73f6k6ag",
+      "circuit_index": 0
+    },
+    "y": {
+      "counts": {
+        "0": 2039,
+        "1": 2057
+      },
+      "shots": 4096,
+      "exp_val": -0.00439453125,
+      "transpiled_depth": 4,
+      "batch_job_id": "d7ds00h4p4gc73f6k6ag",
+      "circuit_index": 1
+    },
+    "phi_cal_rad": -0.004665596006504378,
+    "phi_cal_deg": -0.26731896008579226
+  },
+  "sweep": [
+    {
+      "n_steps": 2,
+      "ideal": {
+        "n_steps": 2,
+        "m00_re": 0.9387186906259879,
+        "m00_im": -0.17365750344631758,
+        "magnitude": 0.9546463788407605,
+        "delta_rad": -0.18292614812110466,
+        "delta_deg": -10.480896249924252
+      },
+      "x_hw": 0.31005859375,
+      "y_hw": -0.43701171875,
+      "delta_hw_rad": -0.9537247962152453,
+      "delta_hw_deg": -54.64440564010807,
+      "magnitude_hw": 0.5358316656218225,
+      "delta_error_deg": -44.16350939018382,
+      "runs": {
+        "X": {
+          "counts": {
+            "0": 2683,
+            "1": 1413
+          },
+          "shots": 4096,
+          "exp_val": 0.31005859375,
+          "transpiled_depth": 69,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 0
+        },
+        "Y": {
+          "counts": {
+            "1": 2943,
+            "0": 1153
+          },
+          "shots": 4096,
+          "exp_val": -0.43701171875,
+          "transpiled_depth": 69,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 1
+        }
+      }
+    },
+    {
+      "n_steps": 4,
+      "ideal": {
+        "n_steps": 4,
+        "m00_re": 0.8557199456632215,
+        "m00_im": -0.3096325142664484,
+        "magnitude": 0.9100158895848078,
+        "delta_rad": -0.34718228915125726,
+        "delta_deg": -19.89207989005763
+      },
+      "x_hw": 0.076171875,
+      "y_hw": -0.48046875,
+      "delta_hw_rad": -1.4135682758183277,
+      "delta_hw_deg": -80.99149625797484,
+      "magnitude_hw": 0.486469294270027,
+      "delta_error_deg": -61.099416367917215,
+      "runs": {
+        "X": {
+          "counts": {
+            "0": 2204,
+            "1": 1892
+          },
+          "shots": 4096,
+          "exp_val": 0.076171875,
+          "transpiled_depth": 133,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 2
+        },
+        "Y": {
+          "counts": {
+            "1": 3032,
+            "0": 1064
+          },
+          "shots": 4096,
+          "exp_val": -0.48046875,
+          "transpiled_depth": 133,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 3
+        }
+      }
+    },
+    {
+      "n_steps": 6,
+      "ideal": {
+        "n_steps": 6,
+        "m00_re": 0.7187480114209918,
+        "m00_im": -0.4965642630745443,
+        "magnitude": 0.8735987473001523,
+        "delta_rad": -0.6045747895621292,
+        "delta_deg": -34.6395838419199
+      },
+      "x_hw": -0.15283203125,
+      "y_hw": -0.4306640625,
+      "delta_hw_rad": -1.9118077636435165,
+      "delta_hw_deg": -109.53851609711792,
+      "magnitude_hw": 0.4569782976302101,
+      "delta_error_deg": -74.89893225519802,
+      "runs": {
+        "X": {
+          "counts": {
+            "0": 1735,
+            "1": 2361
+          },
+          "shots": 4096,
+          "exp_val": -0.15283203125,
+          "transpiled_depth": 197,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 4
+        },
+        "Y": {
+          "counts": {
+            "0": 1166,
+            "1": 2930
+          },
+          "shots": 4096,
+          "exp_val": -0.4306640625,
+          "transpiled_depth": 197,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 5
+        }
+      }
+    },
+    {
+      "n_steps": 8,
+      "ideal": {
+        "n_steps": 8,
+        "m00_re": 0.44587618487767083,
+        "m00_im": -0.7624299664741554,
+        "magnitude": 0.8832355439059553,
+        "delta_rad": -1.0416212976505819,
+        "delta_deg": -59.68050420631843
+      },
+      "x_hw": -0.1552734375,
+      "y_hw": -0.39111328125,
+      "delta_hw_rad": -1.948717060024958,
+      "delta_hw_deg": -111.653263004572,
+      "magnitude_hw": 0.420808078776071,
+      "delta_error_deg": -51.972758798253565,
+      "runs": {
+        "X": {
+          "counts": {
+            "0": 1730,
+            "1": 2366
+          },
+          "shots": 4096,
+          "exp_val": -0.1552734375,
+          "transpiled_depth": 261,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 6
+        },
+        "Y": {
+          "counts": {
+            "0": 1247,
+            "1": 2849
+          },
+          "shots": 4096,
+          "exp_val": -0.39111328125,
+          "transpiled_depth": 261,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 7
+        }
+      }
+    },
+    {
+      "n_steps": 10,
+      "ideal": {
+        "n_steps": 10,
+        "m00_re": 0.02753079047229562,
+        "m00_im": -0.8788378052087809,
+        "magnitude": 0.8792689192097128,
+        "delta_rad": -1.5394802069020843,
+        "delta_deg": -88.20571849941618
+      },
+      "x_hw": -0.12548828125,
+      "y_hw": -0.19189453125,
+      "delta_hw_rad": -2.149939150354609,
+      "delta_hw_deg": -123.18243952526123,
+      "magnitude_hw": 0.22928327425858244,
+      "delta_error_deg": -34.976721025845045,
+      "runs": {
+        "X": {
+          "counts": {
+            "0": 1791,
+            "1": 2305
+          },
+          "shots": 4096,
+          "exp_val": -0.12548828125,
+          "transpiled_depth": 325,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 8
+        },
+        "Y": {
+          "counts": {
+            "1": 2441,
+            "0": 1655
+          },
+          "shots": 4096,
+          "exp_val": -0.19189453125,
+          "transpiled_depth": 325,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 9
+        }
+      }
+    },
+    {
+      "n_steps": 12,
+      "ideal": {
+        "n_steps": 12,
+        "m00_re": -0.17157242771465278,
+        "m00_im": -0.8169092156586679,
+        "magnitude": 0.8347321513994532,
+        "delta_rad": -1.7778137190835206,
+        "delta_deg": -101.86122286394227
+      },
+      "x_hw": -0.09228515625,
+      "y_hw": -0.16015625,
+      "delta_hw_rad": -2.0935466194062906,
+      "delta_hw_deg": -119.9513855058617,
+      "magnitude_hw": 0.1848420257358954,
+      "delta_error_deg": -18.09016264191943,
+      "runs": {
+        "X": {
+          "counts": {
+            "1": 2237,
+            "0": 1859
+          },
+          "shots": 4096,
+          "exp_val": -0.09228515625,
+          "transpiled_depth": 389,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 10
+        },
+        "Y": {
+          "counts": {
+            "0": 1720,
+            "1": 2376
+          },
+          "shots": 4096,
+          "exp_val": -0.16015625,
+          "transpiled_depth": 389,
+          "batch_job_id": "d7ds02qr4f1s73a4fdh0",
+          "circuit_index": 11
+        }
+      }
+    }
+  ],
+  "ideal_prediction": {
+    "eigenphases_rad": [
+      -1.915120938636709,
+      -0.03189202119128457,
+      0.031892021191284384,
+      1.9151209386367092
+    ],
+    "eigenphases_deg": [
+      -109.72834704101614,
+      -1.8272782144023898,
+      1.8272782144023791,
+      109.72834704101615
+    ],
+    "total_phase_rad": -1.7778137190835206,
+    "total_phase_deg": -101.86122286394227,
+    "m00_magnitude": 0.8347321513994532
+  },
+  "backend": "ibm_strasbourg",
+  "qubits": {
+    "anc": 72,
+    "q_fwd": 62,
+    "q_inv": 81
+  },
+  "shots": 4096,
+  "timestamp": "2026-04-12T17:54:08.090565"
+}
