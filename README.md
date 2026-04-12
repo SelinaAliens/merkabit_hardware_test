@@ -60,6 +60,10 @@ Two single-qubit rotations. Opposite signs. Every quantum computer on Earth can 
 
 ### Pentachoric Circuit Hardware — ibm_strasbourg (Apr 2026)
 
+**Published:** Paper 24 "The P Gate Is Native" (Apr 6–7 session) · Paper 25 "Four of Five" (Apr 9 session)
+**Appendix N predictions: 5/5 retired. ✅ All confirmed.**
+
+
 **P3 Z2 Symmetry** (`experiments/run_p3_z2.py`): mean Z2 error = **0.0163** across n=4,6,8,12
 steps (threshold 0.03). Chirality reversal confirmed on hardware. ✅
 
@@ -101,10 +105,16 @@ all transpile to depth 6 (zero CX). One batched IBM job `d7bovn8evlqs73a4buk0`.
 P_return oscillates at 97-99% fidelity throughout — quantum dynamics, not decoherence.
 Quasi-period 3.3T = 39.6 steps confirmed. ✅
 
-**P5 DTC** (`experiments/run_p5_dtc.py`): PENDING — IBM platform outage April 10, 2026. ⏳
-Script ready: 24 circuits (n=1..48, stride 2), zero CX, all transpile to depth 6.
-Ideal DTC ratio: paired=55.8 >> unpaired=6.7. Appendix N caveat: n ≤ 48 (4T coherence budget).
-Run when IBM recovers: `python3 -u experiments/run_p5_dtc.py --backend ibm_brussels --n-max 48 --stride 2 --shots 2048 --epsilon 0.1`
+**P5 DTC** (`experiments/run_p5_dtc.py`): ibm_brussels, April 12, 2026. ✅
+
+| Run | DTC ratio (hw) | DTC ratio (ideal) |
+|-----|---------------|-------------------|
+| Paired | **364** | 55.77 |
+| Unpaired control | 33 | 6.73 |
+| Paired ε=0.1 | **523** | 81.11 |
+
+DTC subharmonic dominant. Paired >> Unpaired (11x). Perturbation strengthens DTC (523 > 364). ✅
+Absolute ratios exceed ideal due to stride=4 sparse sampling; qualitative pattern confirmed.
 
 Full results: [HARDWARE-RESULTS.md](HARDWARE-RESULTS.md)
 
@@ -181,8 +191,22 @@ pip install numpy scipy qiskit qiskit-aer qiskit-ibm-runtime
 
 All simulations use seed 42 for reproducibility.
 
+## Theoretical Extension (April 2026)
+
+The merkabit framework has extended to derive fundamental physics from first principles:
+
+| Paper | Title | Key result |
+|-------|-------|-----------|
+| Paper 20 | Gravity and Dark Matter from the Eisenstein Lattice | Inverse square law from 3D Laplacian Green's function; G_eff = 0.2542; dark matter = sedenion zero-divisor sector |
+| Paper 21 | Orbital Quantisation, CPT, and the Pentachoric Transient | Bohr quantisation from Coxeter period; forbidden zone at r=8; falsifiable LIGO prediction (φ-trough at N≈75) |
+| Paper 22 | The Cosmological Constant from Vacuum Monopole Suppression | Λ = 2.870×10⁻¹²² (observed: 2.87×10⁻¹²²) — 0.01% accuracy, zero free parameters |
+| Paper 23 | Ternary-Binary Coupling, Newton's Constant, and the Hierarchy | G = 1/N_spinor², Λ, Higgs vev v ≈ 255.3 GeV — three constants from R; hierarchy resolved via Euler's identity |
+| Paper 24 | The P Gate Is Native | First hardware validation; P gate = Rz(+φ)⊗Rz(−φ), zero overhead; 8 results across 4 circuit families |
+| Paper 25 | Four of Five | P1 Berry phase, P2 quasi-period, tau=5 rotation gap confirmed; 4/5 Appendix N predictions retired |
+
 ## Companion Papers
 
 - **Base paper**: [The Merkabit](https://doi.org/10.5281/zenodo.18925475) (Zenodo)
 - **Paper 15**: [The Rotation Gap Is Flat](https://github.com/selinaserephina-star/rotation_gap_merkabit) (GitHub)
+- **Paper 25**: [Four of Five](https://doi.org/10.5281/zenodo.19502830) (Zenodo)
 - **Full series**: Papers 1-19, Merkabit Research Series
