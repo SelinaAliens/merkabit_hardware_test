@@ -282,19 +282,39 @@ verified within this window.
 The unpaired control's high ⟨ZZ⟩ std (0.313) vs paired (0.131) confirms the structural difference:
 the merkabit P gate suppresses variance while the unpaired circuit decays chaotically.
 
-**Note on absolute DTC ratios**: Hardware ratios (364/33/523) exceed ideal (55.77/6.73/81.11)
-due to sparse stride=4 sampling (12 circuits at n=1,5,9,...,45) affecting power spectrum scaling.
-The qualitative pattern — paired >> unpaired, perturbed > paired — is the operative result.
+**Note on absolute DTC ratios**: Hardware ratios exceed ideal due to sparse stride=4 sampling
+(12 circuits at n=1,5,9,...,45) collapsing the 1/(2T) frequency to DC in the power spectrum.
+The qualitative pattern — paired >> unpaired consistently — is the operative result.
 
 ### Ideal DTC Ratios (classical simulation, for reference)
 
 | Run | Power at 1/2T | DTC ratio (2T/T) |
 |-----|--------------|-----------------|
-| Paired clean | 1.5853 | 55.77 |
+| Paired clean (ε=0) | 1.5853 | 55.77 |
 | Unpaired control | 75.6886 | 6.73 |
-| Paired eps=0.1 | 3.1726 | **81.11** |
+| Paired ε=0.1 | 3.1726 | **81.11** |
+| Paired ε=0.2 | 5.1272 | 26.37 |
+| Paired ε=0.3 | 7.2527 | 15.13 |
 
-**Output file**: `outputs/p5_dtc/p5_dtc_ibm_brussels_20260412_170917.json`
+### ε Sweep — DTC Robustness (April 12, 2026)
+
+Additional runs sweeping perturbation strength. Paired/control ratio stable across all ε.
+
+| ε | Backend | Paired ratio | Unpaired ratio | Paired/Ctrl 2T | Output file |
+|---|---------|-------------|----------------|----------------|-------------|
+| 0.0 (clean) | ibm_brussels | 610 | 26 | 3.44x | `p5_dtc_ibm_brussels_20260412_173936.json` |
+| 0.1 | ibm_brussels | 364 / 523 | 33 | 3.54x | `p5_dtc_ibm_brussels_20260412_170917.json` |
+| 0.2 | ibm_brussels | 403 / 273 | 36 | 3.58x | `p5_dtc_ibm_brussels_20260412_173142.json` |
+| 0.3 | ibm_strasbourg | 551 / 439 | 35 | 3.20x | `p5_dtc_ibm_strasbourg_20260412_173152.json` |
+
+**DTC robustness confirmed through ε=0.3. ✅**
+
+**Limit of current design**: The ideal predicts a non-monotone peak at ε=0.1 (perturbed stronger
+than clean). Hardware data does not resolve this — stride=4 sampling and job-to-job variability
+(~40% spread) exceed the signal size. Testing the peak requires stride=1/2 with clean and
+perturbed in the same batch job.
+
+**Output file (primary)**: `outputs/p5_dtc/p5_dtc_ibm_brussels_20260412_170917.json`
 
 ---
 
