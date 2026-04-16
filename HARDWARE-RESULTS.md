@@ -349,6 +349,19 @@ perturbed in the same batch job.
 
 **Output file (primary)**: `outputs/p5_dtc/p5_dtc_ibm_brussels_20260412_170917.json`
 
+### IBM Runtime job identifiers (ε sweep)
+
+Recovered from the IBM Quantum Platform workload export for the `Paid` instance (account CRN `1adf86ebeb844c118c6f3bcb355fda62`). Submission order within each batch is paired clean → unpaired control → paired perturbed (~7–8 s per job).
+
+| ε | Backend | Paired clean | Unpaired control | Paired perturbed | UTC |
+|---|---------|-------------|------------------|------------------|-----|
+| 0.0 (baseline) | ibm_brussels  | `d7drpacdm0ls73cc24c0` | `d7drpc2r4f1s73a4f7jg` | — | 15:39:21–29 |
+| 0.1            | ibm_brussels  | `d7drb1sdm0ls73cc1lfg` | `d7drb3p4p4gc73f6jhf0` | `d7drb5ir4f1s73a4eotg` | 15:08:55–15:09:10 |
+| 0.2            | ibm_brussels  | `d7drlhp4p4gc73f6jst0` | `d7drljoevlqs73a6bbn0` | `d7drlloevlqs73a6bbog` | 15:31:19–35 |
+| 0.3            | ibm_strasbourg | `d7drlkp4p4gc73f6jt00` | `d7drlmkdm0ls73cc2140` | `d7drloar4f1s73a4f4cg` | 15:31:31–45 |
+
+All three Strasbourg ε=0.3 jobs and all three Brussels ε=0.2 jobs were submitted concurrently within the same ~30 s window — the two backends alternate in the submission timeline (15:31:19 / 15:31:28 / 15:31:31 / 15:31:35 / 15:31:38 / 15:31:45), which is the two-backend batched dispatcher firing the two P5 DTC runs in parallel.
+
 ---
 
 ## Cross-Architecture Validation (Heron r2 — ibm_kingston)
@@ -368,6 +381,13 @@ the source of observed signals. ibm_kingston uses a different coupling map than 
 | 0.1 | 749 / 331 | 33 | **3.43x** | `p5_dtc_ibm_kingston_20260412_174619.json` |
 
 Eagle r3 reference: paired/ctrl ratio 3.20–3.58x. Heron r2: 3.43–3.92x. **Topology-independent. ✅**
+
+**Kingston P5 DTC job identifiers** (recovered from the IBM Quantum Platform workload export for the Open free-tier instance, account CRN `95b9cbd3-8f7f-4f85-b581-d9ca06d6eb7f`, us-east region):
+
+| ε | Paired clean | Unpaired control | Paired perturbed | UTC |
+|---|--------------|------------------|------------------|-----|
+| 0.0 | `d7drs6h5a5qc73dq8140` | `d7drs8h5a5qc73dq8170` | — | 15:45:30–38 |
+| 0.1 | `d7drs8p5a5qc73dq817g` | `d7drscb0g7hs73dsabr0` | `d7drseh5a5qc73dq81eg` | 15:45:39–15:46:02 |
 
 ### P1b Ramsey — Heron r2
 
